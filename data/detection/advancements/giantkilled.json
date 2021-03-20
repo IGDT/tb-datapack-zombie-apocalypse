@@ -1,0 +1,15 @@
+{
+  "criteria": {
+    "giantkilled": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "nbt": "{Tags:[\"giantzombie\"]}"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "detection:giantkilled"
+  }
+}

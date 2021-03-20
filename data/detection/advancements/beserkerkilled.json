@@ -1,0 +1,15 @@
+{
+  "criteria": {
+    "beserkerkilled": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "nbt": "{Tags:[\"beserkerzombie\"]}"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "detection:beserkerkilled"
+  }
+}

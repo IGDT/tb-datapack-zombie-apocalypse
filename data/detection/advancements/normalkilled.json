@@ -1,0 +1,15 @@
+{
+  "criteria": {
+    "normalkilled": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "nbt": "{Tags:[\"normalzombie\"]}"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "detection:normalkilled"
+  }
+}

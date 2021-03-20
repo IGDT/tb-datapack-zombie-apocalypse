@@ -1,0 +1,15 @@
+{
+  "criteria": {
+    "speederkilled": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "nbt": "{Tags:[\"speederzombie\"]}"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "detection:speederkilled"
+  }
+}
