@@ -1,0 +1,93 @@
+#===============================================================================#
+# THIS SKRIPT HAS BEEN MADE FOR 1.16.4	for             						#
+# troube breeding zombie apocalypse event.										#
+# MADE BY IGDT																	#
+#===============================================================================#
+options:
+	prefix: &2&l[&aZombieApocalypse&2&l]
+	
+#===============================================================================#
+# Permissions list:																#
+# - zombieapocalypse.admin														#
+# - zombieapocalypse.join														#
+#===============================================================================#
+#      DO NOT TOUCH THE CODE BELOW UNLESS YOU KNOW WHAT YOU ARE DOING!!			#
+#===============================================================================#	
+	Version: 1.0.0
+variables:
+	{activegame} = true
+	
+on load:
+	wait 6 tick
+	send "[ZombieApocalypse] Version {@Version} has been loaded." to console
+	
+on unload:
+	wait 6 ticks
+	send "[ZombieApocalypse] has stopped" to console
+	
+command /zombieapocalypse [<start>] [<player>]:
+	permission: zombieapocalypse.admin
+	aliases: /za
+	trigger:
+		if arg-1 is "help":
+			if player doesn't have permission "zombieapocalypse.admin":
+				send "&7[&4You have no access to this command.&7]"
+				stop
+			if player has permission "zombieapocalypse.admin":
+				send "&8----------{@prefix} &cHelp Menu &8----------"
+				send "&a/za start &7- &aStarts the apocalypse on the specified blocks."
+				send "&a/za stop &7- &aStops the apocalypse on the specified blocks."
+				send "&a/za spectator <playername> &7- &aSets the given player in gamemode spectator."
+				send "&a/za help &7- &aShows this list of commands"
+				send "&8-----------------------------------------"
+				stop
+				
+		if arg-1 is "start":
+			set gamemode of player to Survival
+			teleport player to location(X Y Z world "World")
+			broadcast "{@prefix} &a&lPrepare for battle!"
+			loop all players:
+				create bossbar titled "&4&lZombies start spawning if the bar reaches 0" and id "battlebar" for player with progress 100 with colors red
+				wait 5 ticks
+				loop 100 times:
+					set {_Value} to value of bossbar "battlebar"
+					remove 1 from {_Value}
+					set bossbar "battlebar" value to {_Value}
+					wait 5 ticks
+				remove bossbar "battlebar"
+			#run function here
+			
+		if arg-1 is "stop":
+			if {activegame} is true:
+				if player doesn't have permission "serverlock.admin":
+					send "&7[&4You have no access to this command.&7]"
+					stop
+				if player has permission "serverlock.admin":
+					broadcast "{@prefix} &a&l✔ Stopping the game."
+					set {activegame} to false
+					stop
+			
+		if arg-1 is "spectator":
+			if player doesn't have permission "zombieapocalypse.admin":
+				send "&7[&4You have no access to this command.&7]"
+				stop
+			if player has permission "zombieapocalypse.admin":
+				if arg-2 is not set:
+					send "{@prefix} &cPlease specify a username."
+				if arg-2 is set:
+					send "{@prefix} &4%arg-2%&c's gamemode has been set to spectator, he will not be able to participate!"
+					execute player command "/gamemode spectator %arg-2%"
+					stop
+					
+on connect:
+	if {activegame} is true:
+		if player doesn't have permission "zombieapocalypse.join":
+			kick the player due to "The Zombie Apocalypse Event is active. %newline% &fYou are not able to join the smp now. %newline%If you are a guild member, ping IGDT or neyoa in the discord."
+	set gamemode of player to Survival
+	
+on death:
+    set gamemode of player to Spectator
+	set the death message to "%player% died from a zombie and will respawn the next round!"
+	
+	
+	
