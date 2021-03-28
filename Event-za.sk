@@ -248,13 +248,13 @@ command /zombieapocalypse [<text="menu">] [<text>]:
 						set block at location at -39, 68, 0 in world "void" to air
 						set block at location at -39, 74, 0 in world "void" to air
 						stop
-					if arg-2 is "close":
-						stop
+						
 		if arg-1 is "menu":
 			open chest inventory with 1 row named "&a&lZombie Apocalypse" to player	
 			set slot 0 of player's current inventory to lime wool named "&a&lClick to start the event"
 			set slot 1 of player's current inventory to red wool named "&4&lClick to stop the event"
 			set slot 3 of player's current inventory to skeleton skull named "&cHow to remove a player:" with lore "&fType /za spectator <player>"
+			set slot 5 of player's current inventory to raw beef named "&cSet gm for everyone to survival"
 			set slot 6 of player's current inventory to netherite sword named "&cClick kill all mobs"
 			set slot 8 of player's current inventory to bookshelf named "&cClick to see all commands"
 		
@@ -267,6 +267,9 @@ on inventory click:
     if event-slot = red wool named "&4&lClick to stop the event":
         execute player command "/za stop"
         close player's inventory
+    if event-slot = raw beef named "&cSet gm for everyone to survival":
+        loop all players:
+            set gamemode of player to Survival
     if event-slot = netherite sword named "&cClick kill all mobs":
         execute player command "/lagg killmobs"
     if event-slot = bookshelf named "&cClick to see all commands":
@@ -278,26 +281,52 @@ on connect:
 		send "{@prefix} &aThe event is currently active, if the gate is not open wait for the next round."
 	
 on death:
-    wait 5 seconds
-    teleport player to location at 0, 65, 0 in world "void"
-    #set gamemode of player to Spectator
-    set the death message to "&2%player% &adied from a zombie and will respawn the next round!"
+    victim is a player:
+        wait 5 seconds
+        teleport player to location at 0, 65, 0 in world "void"
+        set gamemode of player to Spectator
+        set the death message to "&2%player% &adied from a zombie and will respawn the next round!"
+		
+        summon zombie at location at -67, 68, 0
+        set helmet of last spawned zombie to victim's skull
+        set chestplate of last spawned zombie to diamond chestplate
+        set leggings of last spawned zombie to diamond leggings
+        set boots of last spawned zombie to diamond boots
 	
-    summon zombie at location at -67, 68, 0
-    set helmet of last spawned zombie to victim's skull
-    set chestplate of last spawned zombie to diamond chestplate
-    set leggings of last spawned zombie to diamond leggings
-    set boots of last spawned zombie to diamond boots
+    victim is a zombie:
+        set {_chance} to a random integer between 1 and 100
+        if {_chance} is between 1 and 95:
+            stop
+        if {_chance} is between 96 and 100:
+            broadcast "{@prefix} &aA giant has spawned to strengthen the other zombies!"
+            make player run command "/function zombies:giantzombie/summon" as op
+            apply strength 1 to all zombies for 1 minute
 	
 on walking on warped hyphae:
     wait 1 second
     if world is "void":
-        send "{@prefix} &aZombie spawned"
-        make player run command "/function zombies:rottenzombie/summon" as op
-	
-on walking on gold block:
-    if world is "void":
-        make player run command "/function zombies:giantzombie/summon" as op
+        set {_chance} to a random integer between 1 and 100
+        if {_chance} is between 1 and 40:
+            make player run command "/function zombies:modifiedzombie/summon" as op
+            stop
+        if {_chance} is between 41 and 50:
+            make player run command "/function zombies:speederzombie/summon" as op
+            stop
+        if {_chance} is between 51 and 55:
+            make player run command "/function zombies:rottenzombie/summon" as op
+            stop
+        if {_chance} is between 56 and 70:
+            make player run command "/function zombies:tankzombie/summon" as op
+            stop
+        if {_chance} is between 71 and 80:
+            make player run command "/function zombies:blinderzombie/summon" as op
+            stop
+        if {_chance} is between 81 and 90:
+            make player run command "/function zombies:flammablezombie/summon" as op
+            stop
+        if {_chance} is between 91 and 100:
+            make player run command "/function zombies:beserkerzombie/summon" as op
+            stop
 
 on command "/spawn":
     if player doesn't have permission "zombieapocalypse.admin":		
