@@ -10,4 +10,6 @@ Download the latest version of these plugins and drop them in your plugins folde
 
 Drop the Event-za in "plugins/skript/scripts"
 
+Drop the datapack files in your datapack folder.
+
 Restart your server and type /za help to see all commands.
