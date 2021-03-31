@@ -13,7 +13,7 @@ options:
 #===============================================================================#
 #      DO NOT TOUCH THE CODE BELOW UNLESS YOU KNOW WHAT YOU ARE DOING!!			#
 #===============================================================================#	
-	Version: 1.1
+	Version: 1.2
 variables:
 	{activeevent} = false
 	
@@ -29,6 +29,7 @@ command /zombieapocalypse [<text="menu">] [<text>]:
 	permission: zombieapocalypse.admin
 	aliases: /za
 	trigger:
+#Event help command
 		if arg-1 is "help":
 			if player doesn't have permission "zombieapocalypse.admin":
 				send "&7[&4You have no access to this command.&7]"
@@ -43,7 +44,8 @@ command /zombieapocalypse [<text="menu">] [<text>]:
 				send "&2/za help &7- &aShows this list of commands"
 				send "&8-----------------------------------------"
 				stop
-				
+
+#Event start command				
 		if arg-1 is "start":
 			make player execute command "/gamerule keepInventory true"
 			make player execute command "/gamerule doMobLoot false"
@@ -74,7 +76,8 @@ command /zombieapocalypse [<text="menu">] [<text>]:
 			set {_pos2} to location(-46, 70, -3, world "void")
 			set blocks within {_pos1} and {_pos2} to air
 			stop
-			
+
+#Event stop command			
 		if arg-1 is "stop":
 			if player doesn't have permission "zombieapocalypse.admin":
 				send "&7[&4You have no access to this command.&7]"
@@ -99,7 +102,8 @@ command /zombieapocalypse [<text="menu">] [<text>]:
 				set {_pos2} to location(-46, 70, -3, world "void")
 				set blocks within {_pos1} and {_pos2} to barrier
 				stop
-			
+
+#Cheater spectate mode command				
 		if arg-1 is "spectator":
 			if player doesn't have permission "zombieapocalypse.admin":
 				send "&7[&4You have no access to this command.&7]"
@@ -112,6 +116,7 @@ command /zombieapocalypse [<text="menu">] [<text>]:
 					execute player command "/gamemode spectator %arg-2%"
 					stop
 
+#The gate commands
 		if arg-1 is "gate":
 			if player doesn't have permission "zombieapocalypse.admin":
 				send "&7[&4You have no access to this command.&7]"
@@ -257,7 +262,8 @@ command /zombieapocalypse [<text="menu">] [<text>]:
 						set block at location at -39, 68, 0 in world "void" to air
 						set block at location at -39, 74, 0 in world "void" to air
 						stop
-						
+
+#The Command /za & /za menu						
 		if arg-1 is "menu":
 			open chest inventory with 1 row named "&a&lZombie Apocalypse" to player	
 			set slot 0 of player's current inventory to lime wool named "&a&lClick to start the event"
@@ -267,11 +273,10 @@ command /zombieapocalypse [<text="menu">] [<text>]:
 			set slot 4 of player's current inventory to skeleton skull named "&cHow to remove a player:" with lore "&fType /za spectator <player>"
 			set slot 5 of player's current inventory to raw beef named "&cSet gm for everyone to survival"
 			set slot 6 of player's current inventory to netherite sword named "&cClick kill all mobs"
+			set slot 7 of player's current inventory to paper named "&cVariables:" with lore "&fEvent active: %{activeevent}%"
 			set slot 8 of player's current inventory to bookshelf named "&cClick to see all commands"
 		
-		if arg-1 is "test":
-			spawn zombie at player with nbt "{DeathLootTable:""/"",Health:10f,Tags:[""modifiedzombie""],CustomName:'{""text"":""Modified Zombie"",""color"":""dark_green""}',HandItems:[{id:""minecraft:golden_axe"",Count:1b,tag:{Unbreakable:1b,Enchantments:[{id:""minecraft:sharpness"",lvl:2s}]}},{}],ArmorItems:[{},{},{id:""minecraft:golden_chestplate"",Count:1b},{id:""minecraft:player_head"",Count:1b,tag:{SkullOwner:{Id:[I;718283949,-31830701,-1350587777,1711816863],Properties:{textures:[{Value:""eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzNmYjRlNWRiOTdmNDc5YzY2YTQyYmJkOGE3ZDc4MWRhZjIwMWE4ZGRhZjc3YWZjZjRhZWY4Nzc3OWFhOGI0In19fQ==""}]}}}}],Attributes:[{Name:generic.max_health,Base:10},{Name:generic.knockback_resistance,Base:1.0},{Name:generic.armor,Base:3}]}"
-			
+#The gui of /za			
 on inventory click:
     name of event-inventory = "&a&lZombie Apocalypse"
     cancel event
@@ -294,35 +299,40 @@ on inventory click:
     if event-slot = bookshelf named "&cClick to see all commands":
         execute player command "/za help"
         close player's inventory
-		
+#Other		
 on connect:
 	if {activeevent} is true:
 		send "{@prefix} &aThe event is currently active, if the gate is not open wait for the next round."
-	
+
+#Death settings		
 on death:
     victim is a player:
+		#player death
         wait 5 seconds
         teleport player to location at 0, 65, 0 in world "void"
         set gamemode of victim to Spectator
         set the death message to "&2%player% &adied from a zombie and will respawn the next round!"
 		
+		#player zombie summon
         summon zombie at location at -67, 68, 0
         set helmet of last spawned zombie to victim's skull
         set chestplate of last spawned zombie to diamond chestplate
         set leggings of last spawned zombie to diamond leggings
         set boots of last spawned zombie to diamond boots
 	
+    attacker is a player
     victim is a zombie:
+        #Effects for zombies and players
+        apply regeneration 2 to the attacker for 5 seconds
         set {_chance} to a random integer between 1 and 100
         if {_chance} is between 1 and 97:
             stop
         if {_chance} is between 98 and 100:
             broadcast "{@prefix} &aKilling the zombies gave them extra strength!"
             apply strength 1 to all zombies for 1 minute
-	
-    attacker is a player:
-        apply potion of regeneration of tier 2 to player for 5 seconds
-	
+            stop
+            
+#Zombie spawning system	
 on walking on warped hyphae:
     wait 1 second
     if world is "void":
@@ -355,7 +365,41 @@ on walking on warped hyphae:
                 stop
         if {_chances} is between 41 and 100:
             stop
-
+			
+#Item generator			
+every 300 seconds:
+    if {activeevent} is true:
+        loop all players:
+            loop all blocks in radius 5 around loop-player:
+                if loop-block is polished blackstone:
+                    broadcast "{@prefix} &aUsefull items have been spawned at a polished blackstone blocks!"
+                    set {_chance} to a random integer between 1 and 100
+                    if {_chance} is between 1 and 20:
+                        drop a ender pearl named "&dLife saver" at loop-block's position
+                        stop
+                    if {_chance} is between 21 and 40:
+                        drop a golden apple named "&eNomnomnom" at loop-block's position
+                        stop
+                    if {_chance} is between 41 and 60:
+                        drop a totem of undying named "&aAnother Chance" at loop-block's position
+                        stop
+                    if {_chance} is between 61 and 80:
+                        drop a netherite sword named "&4Zombie slaughter" with nbt "{Enchantments:[{id:""minecraft:smite"",lvl:3s}]}" at loop-block's position
+                        stop
+                    if {_chance} is between 81 and 85:
+                        drop a netherite helmet named "&4Zombie gear" with nbt "{Enchantments:[{id:""minecraft:protection"",lvl:3s}]}" at loop-block's position
+                        stop
+                    if {_chance} is between 86 and 90:
+                        drop a netherite chestplate named "&4Zombie gear" with nbt "{Enchantments:[{id:""minecraft:protection"",lvl:3s}]}" at loop-block's position
+                        stop
+                    if {_chance} is between 91 and 95:
+                        drop a netherite leggings named "&4Zombie gear" with nbt "{Enchantments:[{id:""minecraft:protection"",lvl:3s}]}" at loop-block's position
+                        stop
+                    if {_chance} is between 96 and 100:
+                        drop a netherite boots named "&4Zombie gear" with nbt "{Enchantments:[{id:""minecraft:protection"",lvl:3s}]}" at loop-block's position
+                        stop
+				
+#Effects & particles
 #To avoid console spam, use the execute commands in a datapack
 #on any movement:
     #execute console command "/execute as @a at @s if entity @e[tag=blinderzombie,distance=..5] run effect give @p blindness 3"
