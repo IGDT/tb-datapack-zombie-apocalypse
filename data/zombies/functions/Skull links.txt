@@ -1,0 +1,28 @@
+modified zombie:
+https://minecraft-heads.com/custom-heads/humanoid/3094-injured-zombie
+
+speeder zombie:
+https://minecraft-heads.com/custom-heads/humanoid/36148-dr-zomboss
+
+rotten zombie:
+https://minecraft-heads.com/custom-heads/humanoid/13990-rotten-water-corpse
+
+tank zombie:
+https://minecraft-heads.com/custom-heads/humanoid/22972-zombie-soldier
+
+blinder zombie:
+https://minecraft-heads.com/custom-heads/humanoid/38104-zombie
+
+flammable zombie:
+https://minecraft-heads.com/custom-heads/humanoid/37835-zombie-fire-wizard
+
+beserker zombie:
+https://minecraft-heads.com/custom-heads/humanoid/18550-zombie-king
+
+giant zombie:
+/
+player zombie:
+see skript
+
+phantom zombie:
+https://minecraft-heads.com/custom-heads/decoration/4512-zombie-head-in-a-bottle
